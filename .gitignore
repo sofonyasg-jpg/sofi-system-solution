@@ -5,3 +5,4 @@
 /prisma/migrations
 /public/sw.js
 /public/workbox-*.js
+.vercel
