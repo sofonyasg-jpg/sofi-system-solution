@@ -5,12 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useLanguage } from '@/lib/i18n/language-context'
 import { cn } from '@/lib/utils'
-import { Button } from './button'
-
-// ማሳሰቢያ፦ የፎልደሩ ስም 'layout' (በትንሽ) መሆኑን አረጋግጥ። 
-// ካልሆነ 'Layout' (በካፒታል) አድርገህ ቀይረው።
-import { LanguageSwitcher } from '../layout/language-switcher'
-import { ThemeToggle } from '../layout/theme-toggle'
 
 export function Navbar() {
   const { t } = useLanguage()
@@ -56,8 +50,8 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* ቀኝ በኩል ያሉት አማራጮች */}
-        <div className="flex items-center gap-2 md:gap-6">
+        {/* ቀኝ በኩል ያሉት ሜኑዎች */}
+        <div className="flex items-center gap-6">
           <nav className="hidden lg:flex items-center gap-8 text-sm font-bold">
             <Link href="#services" className="text-neutral-600 dark:text-neutral-400 hover:text-sky-600 transition-colors">
               {t('nav.services')}
@@ -70,10 +64,7 @@ export function Navbar() {
             </Link>
           </nav>
           
-          <div className="flex items-center gap-2 pl-2 md:pl-4 border-l border-neutral-200 dark:border-neutral-800">
-            <LanguageSwitcher />
-            <ThemeToggle />
-          </div>
+          {/* የሌሉትን Switcher እና ThemeToggle ለጊዜው አጥፍተናቸዋል */}
         </div>
       </div>
     </header>
