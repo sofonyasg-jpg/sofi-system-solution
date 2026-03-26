@@ -1,13 +1,19 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import prisma from '@/lib/prisma'
-import { subscribeSchema } from '@/lib/validations/subscribe'
+
+// ፋይሉ ስለሌለ እዚሁ schema-ውን እንፈጥረዋለን
+const subscribeSchema = z.object({
+  email: z.string().email("ትክክለኛ ኢሜይል ያስገቡ"),
+  language: z.string().optional(),
+})
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    // 'as any' ማድረጋችን TypeScript 'language' የለም ብሎ እንዳያስቆመን ይረዳናል
-    const parsedData = subscribeSchema.parse(body) as any;
+    
+    // ዳታውን እዚሁ ባለው schema እናረጋግጣለን
+    const parsedData = subscribeSchema.parse(body);
     const email = parsedData.email;
     const language = parsedData.language || 'am';
 
@@ -29,6 +35,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, errors: error.errors }, { status: 400 })
     }
     console.error('Subscribe API Error:', error)
-    return NextResponse.json({ success: false, message: 'ውስጣዊ ስህተት አጋጥሟል' }, { status: 500 })
+    return NextResponse.json({ success: false, message: 'የውስጥ ስህተት አጋጥሟል' }, { status: 500 })
   }
 }
