@@ -1,18 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // PWA ስህተት እንዳይፈጥር ለጊዜው አጥፍተነዋል
-  typescript: {
-    // ቢልድ በሚያደርግበት ጊዜ የትየባ ስህተት ቢኖር እንኳ እንዳያቆም ያደርገዋል
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    // የሊንቲንግ ስህተቶች ቢልዱን እንዳያቋርጡት ያደርጋል
-    ignoreDuringBuilds: true,
-  },
-  // በምስሎች ላይ ስህተት እንዳይመጣ
+  /* ማሳሰቢያ፦ ቀደም ሲል የነበረው 'eslint' የሚለው ቁልፍ እዚህ አያስፈልግም፤ 
+     Next.js አሁን በራሱ ስለሚቆጣጠረው ማስወገዱ ማስጠንቀቂያውን ያጠፋዋል።
+  */
+  
   images: {
-    unoptimized: true,
-  }
+    // በዌብሳይቱ ላይ የምንጠቀማቸው ምስሎች ከየትኛውም ምንጭ እንዲመጡ ይፈቅዳል
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
+  
+  // ሌሎች ተጨማሪ ኮንፊገሬሽኖች ካሉህ እዚህ መቀጠል ትችላለህ
 };
 
-module.exports = nextConfig;
+export default nextConfig;
