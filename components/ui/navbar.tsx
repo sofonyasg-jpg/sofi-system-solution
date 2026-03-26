@@ -1,44 +1,64 @@
 'use client'
 
+import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useLanguage } from '@/lib/i18n/language-context'
-import { Button } from './button' 
-// Vercel ስህተት እንዳያወጣ መንገዱን በ @/ አስተካክለነዋል
-import { LanguageSwitcher } from '@/components/layout/language-switcher'
-import { ThemeToggle } from '@/components/layout/theme-toggle'
+import { cn } from '@/lib/utils'
+import { Button } from './button'
+
+// ማሳሰቢያ፦ የፎልደሩ ስም 'layout' (በትንሽ) መሆኑን አረጋግጥ። 
+// ካልሆነ 'Layout' (በካፒታል) አድርገህ ቀይረው።
+import { LanguageSwitcher } from '../layout/language-switcher'
+import { ThemeToggle } from '../layout/theme-toggle'
 
 export function Navbar() {
   const { t } = useLanguage()
+  const [isScrolled, setIsScrolled] = React.useState(false)
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
-      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+    <header 
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
+        isScrolled 
+          ? "bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md h-16 border-neutral-200 dark:border-neutral-800 shadow-sm" 
+          : "bg-white dark:bg-neutral-950 h-20 border-transparent"
+      )}
+    >
+      <div className="container mx-auto px-4 h-full flex items-center justify-between">
         
-        {/* ሎጎ እና ስም ጎን ለጎን (እንደ appdiv.com) */}
-        <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-          <div className="relative w-10 h-10 md:w-12 md:h-12">
+        {/* ሎጎ እና ስም (Sofi System Solution) */}
+        <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
+          <div className="relative w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105">
             <Image 
               src="/images/logo.png" 
               alt="Sofi Logo" 
               fill
-              className="object-contain transition-transform group-hover:scale-110" 
+              className="object-contain" 
               priority 
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg md:text-2xl font-black text-sky-600 italic leading-none">
+            <span className="text-lg md:text-2xl font-black text-sky-600 italic leading-none tracking-tight">
               Sofi System Solution
             </span>
-            <span className="text-[10px] md:text-xs text-neutral-500 font-medium tracking-widest uppercase mt-1">
+            <span className="text-[10px] md:text-xs text-neutral-500 font-bold tracking-[0.2em] uppercase mt-1">
               Technology Excellence
             </span>
           </div>
         </Link>
 
-        {/* ቀኝ በኩል ያሉት ሜኑዎች */}
+        {/* ቀኝ በኩል ያሉት አማራጮች */}
         <div className="flex items-center gap-2 md:gap-6">
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold">
+          <nav className="hidden lg:flex items-center gap-8 text-sm font-bold">
             <Link href="#services" className="text-neutral-600 dark:text-neutral-400 hover:text-sky-600 transition-colors">
               {t('nav.services')}
             </Link>
