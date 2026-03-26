@@ -1,32 +1,39 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_Ethiopic, Inter } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import { Providers } from './providers'
-import Navbar from '@/components/ui/navbar'
+import { Navbar } from '@/components/ui/navbar' // እዚህ ጋር { } መጨመሩን እርግጠኛ ሁን
 import Footer from '@/components/ui/footer'
 import { Toaster } from 'sonner'
 import { Suspense } from 'react'
-import { Analytics } from '@/components/shared/analytics'
 
-const notoSans = Noto_Sans_Ethiopic({ subsets: ['ethiopic'], variable: '--font-noto-sans-ethiopic', display: 'swap' })
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: { default: 'Sofi System Solution', template: '%s | Sofi System' },
-  description: 'የዲጂታል ለውጥ አጋርዎ',
-  openGraph: { title: 'Sofi System Solution', locale: 'am_ET', type: 'website' },
+  title: 'Sofi System Solution - Technology Excellence',
+  description: 'Professional Software Development, Web Design, and IT Solutions in Addis Ababa, Ethiopia.',
+  keywords: 'Software Development, Web Design, Next.js, Flutter, Ethiopia, Addis Ababa, IT Services',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="am" suppressHydrationWarning>
-      <body className={`${notoSans.variable} ${inter.variable} font-sans antialiased`}>
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
+      <body className={`${inter.className} bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-50 antialiased`}>
         <Providers>
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-          <Toaster position="top-center" richColors closeButton />
-          <Suspense fallback={null}><Analytics /></Suspense>
+          <div className="relative flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1">
+              <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
+                {children}
+              </Suspense>
+            </main>
+            <Footer />
+          </div>
+          <Toaster position="top-center" richColors />
         </Providers>
       </body>
     </html>
