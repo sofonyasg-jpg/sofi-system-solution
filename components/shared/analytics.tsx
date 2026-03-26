@@ -11,8 +11,10 @@ export function Analytics() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    if (typeof window.gtag !== 'undefined' && GA_ID) {
-      window.gtag('config', GA_ID, {
+    // TypeScript 'gtag'ን እንዲያውቀው (window as any) እንጠቀማለን
+    const win = window as any;
+    if (typeof win.gtag !== 'undefined' && GA_ID) {
+      win.gtag('config', GA_ID, {
         page_path: pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : ''),
       })
     }
@@ -22,9 +24,17 @@ export function Analytics() {
 
   return (
     <>
-      <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+      <Script 
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} 
+        strategy="afterInteractive" 
+      />
       <Script id="ga" strategy="afterInteractive">
-        {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_ID}');`}
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}');
+        `}
       </Script>
     </>
   )
