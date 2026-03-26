@@ -3,9 +3,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useLanguage } from '@/lib/i18n/language-context'
-import { Button } from './button' // በዛው ፎልደር ስለሆነ './' ይሆናል
-import { LanguageSwitcher } from '../layout/language-switcher' // መንገዱን ቼክ አድርገው
-import { ThemeToggle } from '../layout/theme-toggle' // መንገዱን ቼክ አድርገው
+import { Button } from './button' 
+// Vercel ስህተት እንዳያወጣ መንገዱን በ @/ አስተካክለነዋል
+import { LanguageSwitcher } from '@/components/layout/language-switcher'
+import { ThemeToggle } from '@/components/layout/theme-toggle'
 
 export function Navbar() {
   const { t } = useLanguage()
@@ -14,7 +15,7 @@ export function Navbar() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         
-        {/* ሎጎ እና ስም በአንድ ላይ */}
+        {/* ሎጎ እና ስም ጎን ለጎን (እንደ appdiv.com) */}
         <Link href="/" className="flex items-center gap-2 md:gap-3 group">
           <div className="relative w-10 h-10 md:w-12 md:h-12">
             <Image 
@@ -29,13 +30,13 @@ export function Navbar() {
             <span className="text-lg md:text-2xl font-black text-sky-600 italic leading-none">
               Sofi System Solution
             </span>
-            <span className="text-[10px] md:text-xs text-neutral-500 font-medium tracking-widest uppercase">
+            <span className="text-[10px] md:text-xs text-neutral-500 font-medium tracking-widest uppercase mt-1">
               Technology Excellence
             </span>
           </div>
         </Link>
 
-        {/* ቀኝ በኩል ያሉት አማራጮች */}
+        {/* ቀኝ በኩል ያሉት ሜኑዎች */}
         <div className="flex items-center gap-2 md:gap-6">
           <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold">
             <Link href="#services" className="text-neutral-600 dark:text-neutral-400 hover:text-sky-600 transition-colors">
