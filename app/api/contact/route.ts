@@ -1,31 +1,59 @@
 import { NextResponse } from 'next/server'
-import { z } from 'zod'
-import prisma from '@/lib/prisma'
-import { contactSchema } from '@/lib/validations/contact'
+import { PrismaClient } from '@prisma/client'
 
-export async function POST(request: Request) {
+// Prisma Client ኢንስታንስ መፍጠር
+const prisma = new PrismaClient()
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json()
-    // 'as any' ማድረጋችን TypeScript 'language' የለም ብሎ እንዳያስቆመን ይረዳናል
-    const data = contactSchema.parse(body) as any;
+    // ከፎርሙ የመጣውን ዳታ መቀበል
+    const body = await req.json()
+    const { name, email, phone, message, service, language } = body
 
-    const contact = await prisma.contact.create({
+    // 1. አስፈላጊ ዳታዎች መኖራቸውን ማረጋገጥ (Validation)
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { success: false, error: 'እባክዎ ስም፣ ኢሜይል እና መልክት በትክክል መሙላትዎን ያረጋግጡ!' },
+        { status: 400 }
+      )
+    }
+
+    // 2. ባንተ Schema (model Contact) መሰረት ዳታቤዝ ውስጥ መመዝገብ
+    const newContact = await prisma.contact.create({
       data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        service: data.service,
-        message: data.message,
-        language: data.language || 'am',
+        name,
+        email,
+        phone: phone || null,
+        message: message,
+        service: service || "General",
+        language: language || "am",
+        status: "NEW", // ባንተ Enum መሰረት መጀመሪያ NEW ይሆናል
       },
     })
 
-    return NextResponse.json({ success: true, id: contact.id })
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ success: false, errors: error.errors }, { status: 400 })
-    }
-    console.error('Contact API Error:', error)
-    return NextResponse.json({ success: false, message: 'ውስጣዊ ስህተት አጋጥሟል' }, { status: 500 })
+    // 3. የተሳካ ምላሽ መላክ
+    return NextResponse.json(
+      { 
+        success: true, 
+        message: 'መልክትዎ በስኬት ተመዝግቧል!',
+        id: newContact.id 
+      },
+      { status: 201 }
+    )
+
+  } catch (error: any) {
+    console.error('Prisma Error:', error)
+    
+    // በዳታቤዝ ወይም በኔትወርክ ምክንያት ስህተት ቢፈጠር
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'መልክቱን መመዝገብ አልተቻለም። እባክዎ ትንሽ ቆይተው ደግመው ይሞክሩ!' 
+      },
+      { status: 500 }
+    )
+  } finally {
+    // ግንኙነቱን ለጊዜው ማቋረጥ (Optional for Serverless)
+    await prisma.$disconnect()
   }
 }
