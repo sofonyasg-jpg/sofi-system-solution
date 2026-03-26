@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { Phone, Send, Banknote, ShieldCheck } from 'lucide-react'
+import { Phone, Send, Mail, MapPin } from 'lucide-react'
 import { useLanguage } from '@/lib/i18n/language-context'
 
 export default function Contact() {
@@ -22,8 +22,8 @@ export default function Contact() {
       email: formData.get('email'),
       phone: formData.get('phone'),
       message: formData.get('message'),
-      language: language, // ያንተ Schema የሚጠይቀው
-      service: "Consultation" // እንደ አማራጭ
+      language: language,
+      service: "General Inquiry"
     }
 
     try {
@@ -36,13 +36,13 @@ export default function Contact() {
       const result = await response.json()
 
       if (result.success) {
-        toast.success('መልዕክትዎ በስኬት ተልኳል!')
+        toast.success(language === 'am' ? 'መልዕክትዎ በስኬት ተልኳል!' : 'Message sent successfully!')
         ;(event.target as HTMLFormElement).reset()
       } else {
         toast.error(result.error)
       }
     } catch (error) {
-      toast.error('ግንኙነት ተቋርጧል፣ እባክዎ ኢንተርኔትዎን ያረጋግጡ!')
+      toast.error(language === 'am' ? 'ግንኙነት ተቋርጧል!' : 'Connection failed!')
     } finally {
       setLoading(false)
     }
@@ -51,43 +51,54 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 bg-neutral-50 dark:bg-neutral-900/50">
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-16">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
           
-          <div className="space-y-8">
-            <h2 className="text-4xl font-black text-sky-600 italic">Contact Us</h2>
+          {/* የድርጅቱ መረጃ ክፍል */}
+          <div className="space-y-10">
+            <div>
+              <h2 className="text-4xl font-black text-sky-600 italic mb-6">Get In Touch</h2>
+              <p className="text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                ለማንኛውም የሶፍትዌር ልማት፣ የዌብሳይት ዲዛይን ወይም የቴክኒክ ድጋፍ ጥያቄዎች ካሉዎት ይጻፉልን። የሶፊ ሲስተም ባለሙያዎች በፍጥነት ምላሽ ይሰጡዎታል።
+              </p>
+            </div>
             
             <div className="space-y-6">
-              <div className="flex items-center gap-4 p-4 bg-white dark:bg-neutral-950 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800">
-                <div className="p-3 bg-sky-100 dark:bg-sky-900/30 rounded-lg text-sky-600"><Phone size={24} /></div>
+              <div className="flex items-center gap-5 p-6 bg-white dark:bg-neutral-950 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-800">
+                <div className="p-4 bg-sky-100 dark:bg-sky-900/30 rounded-xl text-sky-600">
+                  <Phone size={28} />
+                </div>
                 <div>
-                  <p className="text-sm text-neutral-500 font-bold uppercase tracking-wider">Call Us</p>
-                  <p className="font-bold text-lg text-neutral-800 dark:text-neutral-200">+251 947 35 95 47</p>
+                  <p className="text-sm text-neutral-500 font-bold uppercase tracking-widest mb-1">Call Us</p>
+                  <p className="font-bold text-2xl text-neutral-800 dark:text-neutral-200">+251 947 35 95 47</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 bg-white dark:bg-neutral-950 rounded-xl shadow-sm border border-neutral-100 dark:border-neutral-800">
-                <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600"><Banknote size={24} /></div>
+              <div className="flex items-center gap-5 p-6 bg-white dark:bg-neutral-950 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-800">
+                <div className="p-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl text-emerald-600">
+                  <MapPin size={28} />
+                </div>
                 <div>
-                  <p className="text-sm text-neutral-500 font-bold uppercase tracking-wider">Payment Methods</p>
-                  <p className="font-bold text-neutral-800 dark:text-neutral-200">Commercial Bank of Ethiopia (CBE)</p>
-                  <p className="font-bold text-neutral-800 dark:text-neutral-200">Bank of Abyssinia</p>
-                  <p className="text-xs text-sky-600 mt-1 italic font-medium">* Account details shared privately for security.</p>
+                  <p className="text-sm text-neutral-500 font-bold uppercase tracking-widest mb-1">Location</p>
+                  <p className="font-bold text-xl text-neutral-800 dark:text-neutral-200">Addis Ababa, Ethiopia</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-neutral-950 p-8 rounded-2xl shadow-2xl border border-neutral-100 dark:border-neutral-800">
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <Input name="name" placeholder="ሙሉ ስም" required className="h-14 font-medium" />
-              <Input name="email" type="email" placeholder="ኢሜይል" required className="h-14 font-medium" />
-              <Input name="phone" placeholder="ስልክ ቁጥር" className="h-14 font-medium" />
-              <Textarea name="message" placeholder="እንዴት ልንረዳዎ እንችላለን?..." required className="min-h-[160px] font-medium" />
-              <Button type="submit" disabled={loading} className="w-full h-14 bg-sky-600 hover:bg-sky-700 text-xl font-bold rounded-xl shadow-lg shadow-sky-500/20">
-                {loading ? 'በመላክ ላይ...' : 'መልዕክት ላክ'} <Send className="ml-2 h-5 w-5" />
+          {/* መልክት መላኪያ ፎርም */}
+          <div className="bg-white dark:bg-neutral-950 p-8 md:p-10 rounded-3xl shadow-2xl border border-neutral-100 dark:border-neutral-800 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-2 h-full bg-sky-600"></div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <Input name="name" placeholder="ሙሉ ስም" required className="h-14 text-lg rounded-xl border-neutral-200" />
+              <Input name="email" type="email" placeholder="ኢሜይል አድራሻ" required className="h-14 text-lg rounded-xl border-neutral-200" />
+              <Input name="phone" placeholder="ስልክ ቁጥር" className="h-14 text-lg rounded-xl border-neutral-200" />
+              <Textarea name="message" placeholder="እንዴት ልንረዳዎ እንችላለን?..." required className="min-h-[180px] text-lg rounded-xl border-neutral-200" />
+              <Button type="submit" disabled={loading} className="w-full h-16 bg-sky-600 hover:bg-sky-700 text-xl font-black rounded-xl shadow-xl shadow-sky-500/20 transition-all active:scale-95">
+                {loading ? 'በመላክ ላይ...' : 'መልዕክት ላክ'} <Send className="ml-3 h-6 w-6" />
               </Button>
             </form>
           </div>
+
         </div>
       </div>
     </section>
