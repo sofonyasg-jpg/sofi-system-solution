@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import prisma from '@/lib/prisma'
-import { contactSchema } from '@/lib/validations/contact' // እዚህ ጋር 'contact' መሆኑን አረጋግጥ
+import { contactSchema } from '@/lib/validations/contact'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    
-    // 1. ዳታውን በ contactSchema እናረጋግጣለን
+    // 'as any' ማድረጋችን TypeScript 'language' የለም ብሎ እንዳያስቆመን ይረዳናል
     const data = contactSchema.parse(body) as any;
 
-    // 2. በ Prisma በኩል ዳታውን እናስገባለን
     const contact = await prisma.contact.create({
       data: {
         name: data.name,
@@ -18,7 +16,7 @@ export async function POST(request: Request) {
         phone: data.phone,
         service: data.service,
         message: data.message,
-        language: data.language || 'am', // TypeScript ስህተት እንዳያሳይ 'any' አድርገነዋል
+        language: data.language || 'am',
       },
     })
 
@@ -28,6 +26,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, errors: error.errors }, { status: 400 })
     }
     console.error('Contact API Error:', error)
-    return NextResponse.json({ success: false, message: 'የውስጥ ስህተት አጋጥሟል' }, { status: 500 })
+    return NextResponse.json({ success: false, message: 'ውስጣዊ ስህተት አጋጥሟል' }, { status: 500 })
   }
 }
