@@ -7,7 +7,6 @@ const LanguageContext = createContext<any>(null)
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLangState] = useState('am')
 
-  // ገጹ ሲከፈት የተቀመጠ ኩኪ ካለ መፈለጊያ
   useEffect(() => {
     const getCookie = (name: string) => {
       const value = `; ${document.cookie}`
@@ -23,16 +22,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const setLanguage = (lang: string) => {
     setLangState(lang)
-    // ኩኪውን ለ1 ዓመት እንዲቆይ አድርጎ ሴቭ ማድረግ
     document.cookie = `NEXT_LOCALE=${lang};path=/;max-age=31536000`
   }
 
+  // የተሻሻለ የ t ፈንክሽን
   const t = (path: string) => {
     const keys = path.split('.')
     let result: any = translations[language as keyof typeof translations]
+    
     for (const key of keys) {
-      if (!result || !result[key]) return path
-      result = result[key]
+      if (result && result[key] !== undefined) {
+        result = result[key]
+      } else {
+        return path // ትርጉሙ ካልተገኘ የቁልፉን ስም ይመልሳል
+      }
     }
     return result
   }
@@ -44,4 +47,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export const useLanguage = () => useContext(LanguageContext)
+export const useLanguage = () => {
+  const context = useContext(LanguageContext)
+  if (!context) throw new Error('useLanguage must be used within LanguageProvider')
+  return context
+}

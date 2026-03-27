@@ -1,11 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* ማሳሰቢያ፦ ቀደም ሲል የነበረው 'eslint' የሚለው ቁልፍ እዚህ አያስፈልግም፤ 
-     Next.js አሁን በራሱ ስለሚቆጣጠረው ማስወገዱ ማስጠንቀቂያውን ያጠፋዋል።
-  */
-  
+  /* እዚህ ውስጥ ሌሎች የNext.js ኮንፊገሬሽኖችን መጨመር ትችላለህ */
+  reactStrictMode: true,
+  // ለምሳሌ ምስሎችን ከሌላ ሳይት የምታመጣ ከሆነ (እንደ Cloudinary ወይም ሌላ) እዚህ ይፈቀዳል
   images: {
-    // በዌብሳይቱ ላይ የምንጠቀማቸው ምስሎች ከየትኛውም ምንጭ እንዲመጡ ይፈቅዳል
     remotePatterns: [
       {
         protocol: 'https',
@@ -13,8 +11,6 @@ const nextConfig = {
       },
     ],
   },
-  
-  // ሌሎች ተጨማሪ ኮንፊገሬሽኖች ካሉህ እዚህ መቀጠል ትችላለህ
 };
 
 export default nextConfig;
