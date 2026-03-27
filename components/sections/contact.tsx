@@ -12,17 +12,17 @@ export default function Contact() {
   const [loading, setLoading] = useState(false)
   const { language } = useLanguage()
 
-  // --- አዲስ የተጨመረ የቴሌግራም መላኪያ ተግባር ---
+  // --- የቴሌግራም መላኪያ ተግባር ---
   const sendToTelegram = async (data: any) => {
-    const BOT_TOKEN = '8585868416:AAH97rTQ_J8JtEcBcswvPqQNcBDV_wXi1nY';
-    const CHAT_ID = '344900289'; // ያንተ Chat ID
+    const BOT_TOKEN = '8585868416:AAH97rTQ_J8JtEcBcswvPqQNcBDV_wXi1nY'
+    const CHAT_ID = '344900289'
     
     const telegramMsg = `📩 **አዲስ መልዕክት ከዌብሳይት**\n\n` +
                         `👤 **ስም:** ${data.name}\n` +
                         `📧 **ኢሜይል:** ${data.email}\n` +
                         `📞 **ስልክ:** ${data.phone || 'ያልተጠቀሰ'}\n` +
                         `📝 **መልዕክት:** ${data.message}\n` +
-                        `🌐 **ቋንቋ:** ${data.language === 'am' ? 'Amharic' : 'English'}`;
+                        `🌐 **ቋንቋ:** ${data.language === 'am' ? 'Amharic' : 'English'}`
 
     try {
       await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -33,14 +33,13 @@ export default function Contact() {
           text: telegramMsg,
           parse_mode: 'Markdown'
         })
-      });
-      return true;
+      })
+      return true
     } catch (error) {
-      console.error("Telegram Error:", error);
-      return false;
+      console.error("Telegram Error:", error)
+      return false
     }
   }
-  // -------------------------------------------
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -57,28 +56,24 @@ export default function Contact() {
     }
 
     try {
-      // 1. መጀመሪያ ወደ አንተ ቴሌግራም ይላካል
-      const tgSuccess = await sendToTelegram(data);
+      // መጀመሪያ ወደ ቴሌግራም ይላካል
+      const tgSuccess = await sendToTelegram(data)
 
-      // 2. ከዚያ ወደ ድርጅቱ API ይላካል (ካለህ)
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-
-      const result = await response.json()
-
-      if (tgSuccess || result.success) {
-        toast.success(language === 'am' ? 'መልዕክትዎ በስኬት ተልኳል!' : 'Message sent successfully!')
+      if (tgSuccess) {
+        // ለደንበኛው የሚመጣ ማሳወቂያ
+        const successMsg = language === 'am' 
+          ? 'መልዕክትዎ ተልኳል! በቅርቡ በኢሜይልዎ ምላሽ እንሰጥዎታለን።' 
+          : 'Message sent! We will get back to you via email shortly.'
+        
+        toast.success(successMsg, {
+          duration: 6000,
+        })
         ;(event.target as HTMLFormElement).reset()
       } else {
-        toast.error(result.error || 'ስህተት ተፈጥሯል!')
+        toast.error(language === 'am' ? 'ስህተት ተፈጥሯል! እባክዎ ደግመው ይሞክሩ።' : 'Error! Please try again.')
       }
     } catch (error) {
-      // API ባይኖርም እንኳን ቴሌግራም ከሰራ እንደ ተሳካ ይቆጠራል
-      toast.success(language === 'am' ? 'መልዕክትዎ ተልኳል!' : 'Message sent!')
-      ;(event.target as HTMLFormElement).reset()
+      toast.error('Connection error!')
     } finally {
       setLoading(false)
     }
