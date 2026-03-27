@@ -1,47 +1,69 @@
-'use client'
+import React from 'react';
+import { FaFacebook, FaTelegramPlane, FaRobot, FaPhoneAlt, FaEnvelope } from 'react-icons/fa';
 
-import { useLanguage } from '@/lib/i18n/language-context'
-import Link from 'next/link'
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react'
-import { Button } from './button'
-
-export default function Footer() {
-  const { t } = useLanguage()
-  const year = new Date().getFullYear()
-
+const Footer = () => {
   return (
-    <footer className="bg-neutral-900 text-white pt-16 pb-8">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-primary-500">Sofi System Solution</h3>
-            <p className="text-neutral-400 text-sm leading-relaxed">{t('footer.motto')}</p>
-          </div>
+    <footer className="bg-gray-900 text-white py-10">
+      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        {/* ስለ ድርጅቱ */}
+        <div>
+          <h2 className="text-xl font-bold mb-4">Sofi System Solution</h2>
+          <p className="text-gray-400">
+            ጥራቱን የጠበቀ ዌብሳይት፣ ሞባይል አፕ እና ዘመናዊ ሶፍትዌሮችን በማልማት የድርጅትዎን ስኬት እናፋጥናለን።
+          </p>
+        </div>
 
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('footer.quickLinks')}</h4>
-            <ul className="space-y-3 text-neutral-400">
-              <li><Link href="#home" className="hover:text-primary-500">{t('nav.home')}</Link></li>
-              <li><Link href="#services" className="hover:text-primary-500">{t('nav.services')}</Link></li>
-              <li><Link href="#contact" className="hover:text-primary-500">{t('nav.contact')}</Link></li>
-            </ul>
-          </div>
+        {/* ኮንታክት መረጃ */}
+        <div>
+          <h2 className="text-xl font-bold mb-4">ያግኙን</h2>
+          <ul className="text-gray-400 space-y-2">
+            <li><FaPhoneAlt className="inline mr-2" /> +251 947 35 95 47</li>
+            <li><FaEnvelope className="inline mr-2" /> sofonyasg@gmail.com</li>
+            <li>📍 Addis Ababa, Ethiopia</li>
+          </ul>
+        </div>
 
-          <div>
-            <h4 className="text-lg font-semibold mb-6">{t('contact.title')}</h4>
-            <ul className="space-y-4 text-neutral-400">
-              <li className="flex items-center gap-3"><Phone size={18} /> +251 947 35 95 47</li>
-              <li className="flex items-center gap-3"><Mail size={18} /> sofonyasg@gmail.com</li>
-            </ul>
-            <div className="mt-6">
-               <Button size="sm" onClick={() => window.location.href='#contact'}>Get in Touch</Button>
-            </div>
+        {/* ሶሻል ሚዲያ ሊንኮች */}
+        <div>
+          <h2 className="text-xl font-bold mb-4">ይከተሉን</h2>
+          <div className="flex flex-col space-y-3">
+            {/* Facebook */}
+            <a 
+              href="https://www.facebook.com/profile.php?id=61578429291197" 
+              target="_blank" rel="noopener noreferrer"
+              className="flex items-center hover:text-blue-500 transition-colors"
+            >
+              <FaFacebook className="mr-2" /> Facebook Page
+            </a>
+
+            {/* Telegram Channel */}
+            <a 
+              href="https://t.me/sofi_system_solution" 
+              target="_blank" rel="noopener noreferrer"
+              className="flex items-center hover:text-blue-400 transition-colors"
+            >
+              <FaTelegramPlane className="mr-2" /> Telegram Channel
+            </a>
+
+            {/* Information Bot */}
+            <a 
+              href="https://t.me/Sofi_System_Solution_INFObot" 
+              target="_blank" rel="noopener noreferrer"
+              className="flex items-center hover:text-green-400 transition-colors"
+            >
+              <FaRobot className="mr-2" /> Official Info Bot
+            </a>
           </div>
         </div>
-        <div className="border-t border-neutral-800 pt-8 text-center text-neutral-500 text-sm">
-          <p>© {year} Sofi System Solution. {t('footer.copyright')}</p>
-        </div>
+
+      </div>
+      
+      <div className="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} Sofi System Solution. All rights reserved.</p>
       </div>
     </footer>
-  )
-}
+  );
+};
+
+export default Footer;
